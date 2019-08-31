@@ -14,6 +14,7 @@ import java.util.Set;
  * @author baochen1.zhang
  * @date 2019.08.28
  */
+@SuppressWarnings("unchecked")
 @Slf4j
 public class FieldFormatterFactory {
     private static Map<Class, FormatterHelper> formatterCacheMap = new HashMap<>(32);
@@ -21,20 +22,19 @@ public class FieldFormatterFactory {
     static {
         Reflections reflections = new Reflections(FieldFormatterFactory.class.getPackage().getName());
         Set<Class<? extends FormatterHelper>> classes = reflections.getSubTypesOf(FormatterHelper.class);
-        classes.forEach(x -> {
+        classes.forEach(formatter -> {
             try {
-                if (Modifier.isAbstract(x.getModifiers())) {
-                    log.info("{} is abstract class, skipped.", x.getName());
+                if (Modifier.isAbstract(formatter.getModifiers())) {
+                    log.info("{} is abstract class, skipped.", formatter.getName());
                     return;
                 }
 
-                ClassLoader classLoader = FieldFormatterFactory.class.getClassLoader();
-                log.info("classLoader: {}; loadClass: {}", classLoader, x.getName());
-                classLoader.loadClass(x.getName());
+                FormatterHelper formatterHelper = formatter.newInstance();
+                Set<Class> klsSet = formatterHelper.getValueTypes();
 
-                FormatterHelper formatterHelper = x.newInstance();
-
-                register(formatterHelper.getValueType(), formatterHelper);
+                klsSet.forEach(valueType -> {
+                    register(valueType, formatterHelper);
+                });
 
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
@@ -42,7 +42,7 @@ public class FieldFormatterFactory {
         });
     }
 
-    public static FieldFormatter get(@NonNull Class kls) {
+    public static <T> FieldFormatter<T> get(@NonNull Class<T> kls) {
         if (formatterCacheMap.containsKey(kls)) {
             return formatterCacheMap.get(kls);
         }

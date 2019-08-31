@@ -61,7 +61,7 @@ public class RowMata {
                 .order(exportField.exportOrder())
                 .property(field.getName())
                 .head(StringUtils.defaultIfBlank(exportField.head(), field.getName()))
-                .dataPattern(exportField.datePattern())
+                .datePattern(exportField.datePattern())
                 .typeAutoJudge(exportField.typeAutoJudge())
                 .precision(exportField.precision())
                 .roundingMode(exportField.roundingMode())

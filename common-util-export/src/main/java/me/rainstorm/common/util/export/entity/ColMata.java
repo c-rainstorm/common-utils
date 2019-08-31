@@ -33,7 +33,7 @@ public class ColMata implements Comparable<ColMata> {
     /**
      * @see ExportField#datePattern()
      */
-    private String dataPattern;
+    private String datePattern;
 
     /**
      * @see ExportField#typeAutoJudge()

@@ -17,6 +17,8 @@ public class DateTimeFormatterUtil {
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
     public static final String YYYYMMDDHHMMSS = "yyyyMMddHHmmss";
     public static final String YYYYMMDD = "yyyyMMdd";
+    public static final String HH_MM_SS = "HH:mm:ss";
+    public static final String HHMMSS = "HHmmss";
 
     private static volatile Map<String, DateTimeFormatter> formatterCache = new ConcurrentHashMap<>();
 
@@ -65,6 +67,7 @@ public class DateTimeFormatterUtil {
 
         private String pattern;
         private DateTimeFormatter formatter;
+
         DateTimePatternEnum(String pattern, DateTimeFormatter formatter) {
             this.pattern = pattern;
             DateTimeFormatter f = formatter;

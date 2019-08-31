@@ -1,7 +1,11 @@
-package me.rainstorm.common.util.export.formatter;
+package me.rainstorm.common.util.export.formatter.impl;
 
 import me.rainstorm.common.util.export.entity.ColMata;
+import me.rainstorm.common.util.export.formatter.AbstractFieldFormatter;
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author baochen1.zhang
@@ -10,8 +14,10 @@ import org.apache.commons.lang3.ObjectUtils;
 public class DefaultFieldFormatter extends AbstractFieldFormatter<Object> {
 
     @Override
-    public Class<Object> getValueType() {
-        return Object.class;
+    public Set<Class> getValueTypes() {
+        Set<Class> kls = new HashSet<>();
+        kls.add(Object.class);
+        return kls;
     }
 
     @Override

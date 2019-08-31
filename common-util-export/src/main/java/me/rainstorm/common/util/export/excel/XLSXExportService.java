@@ -21,16 +21,23 @@ import java.nio.file.Paths;
  */
 @Slf4j
 public class XLSXExportService<E> extends AbstractExcelExportService<E> {
-    private static final int SHEET_HEAD_ROW_NUM = 2;
+    private static final int SHEET_HEAD_ROW_NUM = 1;
     private static final int EXCEL_XLSX_SINGLE_SHEET_DATA_SIZE = 1000000;
-    private static final int EXCEL_XLSX_SINGLE_SHEET_SIZE = EXCEL_XLSX_SINGLE_SHEET_DATA_SIZE + SHEET_HEAD_ROW_NUM;
 
-    public XLSXExportService(@NonNull Class<E> kls, @NonNull String sheetNamePrefix, @NonNull OutputStream outputStream) throws ExportColumnEmptyException {
-        super(kls, EXCEL_XLSX_SINGLE_SHEET_SIZE, sheetNamePrefix, outputStream);
+    public XLSXExportService(@NonNull Class<E> kls, @NonNull String sheetNamePrefix, @NonNull OutputStream outputStream, int sheetSize) throws ExportColumnEmptyException {
+        super(kls, Math.max(Math.min(sheetSize, EXCEL_XLSX_SINGLE_SHEET_DATA_SIZE), 1) + SHEET_HEAD_ROW_NUM, sheetNamePrefix, outputStream);
 
         SXSSFWorkbook sxssfWorkbook = new SXSSFWorkbook();
         sxssfWorkbook.setCompressTempFiles(true);
         setWorkbook(sxssfWorkbook);
+    }
+
+    public XLSXExportService(@NonNull Class<E> kls, @NonNull String sheetNamePrefix, @NonNull OutputStream outputStream) throws ExportColumnEmptyException {
+        this(kls, sheetNamePrefix, outputStream, EXCEL_XLSX_SINGLE_SHEET_DATA_SIZE);
+    }
+
+    public XLSXExportService(@NonNull Class<E> kls, @NonNull File exportFile, int sheetSize) throws FileNotFoundException, ExportColumnEmptyException {
+        this(kls, exportFile.getName(), new FileOutputStream(exportFile), sheetSize);
     }
 
     public XLSXExportService(@NonNull Class<E> kls, @NonNull File exportFile) throws FileNotFoundException, ExportColumnEmptyException {

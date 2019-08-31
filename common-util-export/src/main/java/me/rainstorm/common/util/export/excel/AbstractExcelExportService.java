@@ -18,6 +18,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -115,8 +116,8 @@ public abstract class AbstractExcelExportService<E> extends AbstractExportServic
             Object value = PropertyUtils.getProperty(dataObject, colMata.getProperty());
 
             String formatted = colMata.getFieldFormatter().apply(colMata, value);
-            if (colMata.isDigit()) {
-                cell.setCellValue(Double.parseDouble(formatted));
+            if (StringUtils.isNotBlank(formatted) && colMata.isDigit()) {
+                cell.setCellValue(new BigDecimal(formatted).doubleValue());
             } else {
                 cell.setCellValue(formatted);
             }
