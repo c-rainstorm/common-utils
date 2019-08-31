@@ -1,5 +1,6 @@
 package me.rainstorm.common.util.export.formatter;
 
+import me.rainstorm.common.util.export.entity.ColMata;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
@@ -9,7 +10,12 @@ import org.apache.commons.lang3.ObjectUtils;
 public class DefaultFieldFormatter extends AbstractFieldFormatter<Object> {
 
     @Override
-    public String apply(Object o) {
+    public Class<Object> getValueType() {
+        return Object.class;
+    }
+
+    @Override
+    public String apply(ColMata colMata, Object o) {
         return ObjectUtils.defaultIfNull(o, "").toString();
     }
 }

@@ -1,9 +1,10 @@
 package me.rainstorm.common.util.export.entity;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
 import me.rainstorm.common.util.export.anno.ExportField;
 import me.rainstorm.common.util.export.formatter.FieldFormatter;
-import org.apache.poi.ss.usermodel.CellType;
 
 import java.math.RoundingMode;
 
@@ -12,9 +13,7 @@ import java.math.RoundingMode;
  * @date 2019.08.28
  */
 @Builder
-@Getter
-@ToString
-@EqualsAndHashCode
+@Data
 public class ColMata implements Comparable<ColMata> {
     /**
      * @see ExportField#exportOrder()
@@ -55,11 +54,6 @@ public class ColMata implements Comparable<ColMata> {
      * @see ExportField#precision()
      */
     private int precision;
-
-    /**
-     * 导出单元格类型
-     */
-    private CellType cellType;
 
     /**
      * value 格式化器

@@ -65,10 +65,6 @@ public abstract class AbstractExcelExportService<E> extends AbstractExportServic
             return;
         }
 
-        if (CollectionUtils.isEmpty(dataList)) {
-            return;
-        }
-
         Sheet currentSheet;
         int currentNumberOfSheet = workbook.getNumberOfSheets();
         if (currentNumberOfSheet == 0) {
@@ -108,16 +104,22 @@ public abstract class AbstractExcelExportService<E> extends AbstractExportServic
 
     @SuppressWarnings("unchecked")
     private void appendRow(Sheet currentSheet, int curRow, int currentRecordNum, E dataObject) throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        log.debug("exporting: {}", dataObject.toString());
         int curCol = 0;
         Row row = currentSheet.createRow(curRow);
-        row.createCell(curCol++).setCellValue(String.valueOf(currentRecordNum));
+        row.createCell(curCol++).setCellValue(currentRecordNum);
         for (ColMata colMata : rowMata.getColMataList()) {
             //设置单元格的内容
-            Cell cell = row.createCell(curCol++, colMata.getCellType());
+            Cell cell = row.createCell(curCol++);
 
             Object value = PropertyUtils.getProperty(dataObject, colMata.getProperty());
 
-            cell.setCellValue((String) colMata.getFieldFormatter().apply(value));
+            String formatted = colMata.getFieldFormatter().apply(colMata, value);
+            if (colMata.isDigit()) {
+                cell.setCellValue(Double.parseDouble(formatted));
+            } else {
+                cell.setCellValue(formatted);
+            }
         }
     }
 

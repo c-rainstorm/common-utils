@@ -5,10 +5,11 @@ import lombok.NonNull;
 import lombok.ToString;
 import me.rainstorm.common.util.export.anno.ExportField;
 import me.rainstorm.common.util.export.exception.ExportColumnEmptyException;
-import me.rainstorm.common.util.export.formatter.DefaultFieldFormatter;
+import me.rainstorm.common.util.export.formatter.FieldFormatter;
+import me.rainstorm.common.util.export.formatter.FieldFormatterFactory;
+import me.rainstorm.common.util.export.formatter.FormatterHelper;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.CellType;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -54,12 +55,19 @@ public class RowMata {
     private static ColMata buildColMata(Field field) {
         @NonNull ExportField exportField = field.getAnnotation(ExportField.class);
 
+        FieldFormatter fieldFormatter = FieldFormatterFactory.get(field.getType());
+
         return ColMata.builder()
                 .order(exportField.exportOrder())
                 .property(field.getName())
                 .head(StringUtils.defaultIfBlank(exportField.head(), field.getName()))
                 .dataPattern(exportField.datePattern())
-                .fieldFormatter(new DefaultFieldFormatter())
-                .cellType(CellType.STRING).build();
+                .typeAutoJudge(exportField.typeAutoJudge())
+                .precision(exportField.precision())
+                .roundingMode(exportField.roundingMode())
+                .fieldFormatter(fieldFormatter)
+                .isDigit(fieldFormatter instanceof FormatterHelper
+                        && ((FormatterHelper) fieldFormatter).isDigit(exportField))
+                .build();
     }
 }
