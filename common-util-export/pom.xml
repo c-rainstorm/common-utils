@@ -20,7 +20,7 @@
 
         <apache-common-lang3-version>3.9</apache-common-lang3-version>
         <apache-common-beanutil-version>1.9.4</apache-common-beanutil-version>
-        <apache-poi-version>4.1.0</apache-poi-version>
+        <apache-poi-version>4.1.1</apache-poi-version>
         <apache-poi-ooxml-version>4.1.0</apache-poi-ooxml-version>
         <lombok-version>1.18.8</lombok-version>
         <junit-version>4.12</junit-version>
